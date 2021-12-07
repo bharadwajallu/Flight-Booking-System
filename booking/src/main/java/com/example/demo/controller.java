@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,25 +14,32 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/booking")
 public class controller {
-	String fid,fare,fclass,status,name;
+	
 @Autowired
 repo rp;
 @Autowired
-fserv fs1;
+service_layer s;
 	@GetMapping("/book/{name}")
 	public String add(@PathVariable String name) {
+		
 		try {
-			this.fid=fs1.getid();
-			this.fare=fs1.fare();
-			this.fclass=fs1.getclass();
-			status="booked";
-			this.name=name;
-			booking b1=new booking(fid,fare,fclass,status,name);
-				rp.save(b1);
-				return "booked."+"name:"+name+"\nclass:"+b1.getFclass()+"\npayment:"+b1.getPayment_status();
+			booking ba=s.add(name);
+			String fid=ba.getfid();
+			booking b2=rp.get(fid, name);
+			if(b2==null) {
+				rp.insert(ba);
+				return "ticket is booked."+"\nname:"+name+"\nclass:"+ba.getFclass()+"\npayment:"+ba.getPayment_status();
+			}
+			else
+				if(b2.getfid().contentEquals(fid)&&b2.getName().contentEquals(name)) {
+					return "dear user a ticket is booked already with same name in same flight.check credentials to avoid financial loss";
+				}
+				else
+					return "unusual exit";
+
 			
 		}catch(Exception e) {
-			return "cannot book";
+			return e.getMessage();
 		}	
 	}
 	

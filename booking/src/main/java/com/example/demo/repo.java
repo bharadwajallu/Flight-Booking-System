@@ -14,6 +14,5 @@ public interface repo extends MongoRepository<booking,String>{
 	
 @Query(value="{'fid' : ?0,'name':?1}", delete = true)
 public booking delete(String fid,String name);
-@Query("{'fid':?0,'name':?1}")
-public boolean getstat(String fid,String name);
+
 }
