@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  cloud:
+    gateway:
+      routes:
+      - id: service1
+        predicates:
+        - Path=/booking/**
+        uri: http://localhost:8081/
+      - id: service2
+        predicates:
+        - Path=/checkin/**
+        uri: http://localhost:8082/
+      - id: service3
+        predicates:
+        - Path=/fare/**
+        uri: http://localhost:8083/
+      - id: service3
+        predicates:
+        - Path=/search/**
+        uri: http://localhost:8084/
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+            - GET
